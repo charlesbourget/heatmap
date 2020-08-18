@@ -13,7 +13,7 @@
         <HeatmapLayer
           :lat-lng="latLngArray"
           :radius="5"
-          :min-opacity=".75"
+          :min-opacity="0.75"
           :max-zoom="10"
           :blur="5"
         ></HeatmapLayer>
@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import L, { LatLng } from "leaflet";
+import { LatLng } from "leaflet";
 import { latLng } from "leaflet";
 import { LMap, LTileLayer } from "vue2-leaflet";
 import HeatmapLayer from "./HeatmapLayer";
@@ -66,7 +66,7 @@ export default class Heatmap extends Vue {
     this.addHeatMapPoint(this.data);
   }
 
-  addHeatMapPoint(data: any) {
+  addHeatMapPoint(data: Array<Position>) {
     data.forEach((position: Position) => {
       this.latLngArray.push(latLng(position.latitude, position.longitude));
     });

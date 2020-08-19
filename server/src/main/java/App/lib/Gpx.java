@@ -3,7 +3,6 @@ package App.lib;
 import App.model.Position;
 import App.model.Route;
 import io.jenetics.jpx.GPX;
-import io.jenetics.jpx.Metadata;
 import io.jenetics.jpx.Track;
 import io.jenetics.jpx.TrackSegment;
 
@@ -14,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Gpx {
     public static Optional<Route> readGpxFile(Path path) {
@@ -30,19 +30,15 @@ public class Gpx {
 
         String name = gpxFile.getTracks().get(0).getName().orElse("");
         String type = gpxFile.getTracks().get(0).getType().orElse("");
-        Metadata metadata = gpxFile.getMetadata().orElse(null);
-        ZonedDateTime zonedDateTime = ZonedDateTime.now();
-
-        if (metadata != null) {
-            zonedDateTime = metadata.getTime().orElse(ZonedDateTime.now());
-        }
-
-        Date date = Date.from(zonedDateTime.toInstant());
+        AtomicReference<ZonedDateTime> zonedDateTime = new AtomicReference<>();
 
         gpxFile.tracks()
                 .flatMap(Track::segments)
                 .flatMap(TrackSegment::points)
                 .forEach(position -> {
+                    if (i.get() == 0) {
+                        zonedDateTime.set(position.getTime().orElse(ZonedDateTime.now()));
+                    }
                     // Strip 9 waypoint on 10 to save space
                     if (i.get() % 10 == 0) {
                         listPositions.add(new Position(
@@ -57,6 +53,8 @@ public class Gpx {
             // Route can't exist without GPS positions
             return Optional.empty();
         }
+
+        Date date = Date.from(zonedDateTime.get().toInstant());
 
         Route route = new Route(name, type, date, listPositions);
 

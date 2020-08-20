@@ -15,7 +15,8 @@
     "vue-class-component": "^7.2.3",
     "vue-property-decorator": "^8.4.2",
     "vue2-leaflet": "^2.5.2",
-    "vue2-leaflet-heatmap": "^1.0.5"
+    "vue2-leaflet-heatmap": "^1.0.5",
+    "vuejs-datepicker": "^1.6.2"
   },
   "devDependencies": {
     "@types/chai": "^4.2.11",

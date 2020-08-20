@@ -5,12 +5,12 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
-public class RouteResponse {
+public class RouteSearchResponse {
     private HttpStatus status;
     private String message;
     private List<Position> results;
 
-    public RouteResponse() {
+    public RouteSearchResponse() {
     }
 
     /**
@@ -19,7 +19,7 @@ public class RouteResponse {
      * @param results List of all routes
      * @return Status OK and results
      */
-    public RouteResponse ok(List<Position> results) {
+    public RouteSearchResponse ok(List<Position> results) {
         status = HttpStatus.OK;
         message = "Routes found";
         this.results = results;
@@ -31,9 +31,15 @@ public class RouteResponse {
      *
      * @return Status NO_CONTENT
      */
-    public RouteResponse noContent() {
+    public RouteSearchResponse noContent() {
         status = HttpStatus.NO_CONTENT;
         message = "No result found";
+        return this;
+    }
+
+    public RouteSearchResponse invalidRequest() {
+        status = HttpStatus.BAD_REQUEST;
+        message = "At least one date should be passed as param";
         return this;
     }
 
@@ -61,4 +67,3 @@ public class RouteResponse {
         this.results = results;
     }
 }
-
